@@ -207,7 +207,6 @@ app.get('/vidcdn/watch/:id', async(req, res) => {
         const id = req.params.id;
 
         const data = await scrapeM3U8({ id: id });
-
         res.status(200).json(data);
     } catch (err) {
         res.status(500).json({
