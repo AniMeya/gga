@@ -9,10 +9,10 @@ import { extractStreamSB } from './helpers/extractors/streamsb.js';
 import { extractFembed } from './helpers/extractors/fembed.js';
 import { USER_AGENT, renameKey } from './utils.js';
 
-const BASE_URL = 'https://gogoanime.film/';
+const BASE_URL = 'https://gogoanime.gg/';
 const BASE_URL2 = 'https://gogoanime.gg/';
 const ajax_url = 'https://ajax.gogocdn.net/';
-const anime_info_url = 'https://gogoanime.film/category/';
+const anime_info_url = 'https://gogoanime.gg/category/';
 const anime_movies_path = '/anime-movies.html';
 const popular_path = '/popular.html';
 const new_season_path = '/new-season.html';
@@ -20,7 +20,8 @@ const search_path = '/search.html';
 const popular_ongoing_url = `${ajax_url}ajax/page-recent-release-ongoing.html`;
 const recent_release_url = `${ajax_url}ajax/page-recent-release.html`;
 const list_episodes_url = `${ajax_url}ajax/load-list-episode`;
-const seasons_url = 'https://gogoanime.film/sub-category/';
+const seasons_url = 'https://gogoanime.gg/sub-category/';
+const animeTitle = `$(el).find('p.name > a').attr('title')`;
 
 const Referer = 'https://gogoplay.io/';
 const goload_stream_url = 'https://goload.pro/streaming.php';
@@ -151,8 +152,7 @@ export const scrapeM3U8 = async ({ id }) => {
   );
 
   const fetchRes = await axios.get(
-   `
-        ${serverUrl.protocol}//${serverUrl.hostname}/encrypt-ajax.php?${params}`,
+   `${serverUrl.protocol}//${serverUrl.hostname}/encrypt-ajax.php?${params}`,
    {
     headers: {
      'User-Agent': USER_AGENT,
@@ -188,7 +188,7 @@ export const scrapeSearch = async ({ list = [], keyw, page = 1 }) => {
   $('div.last_episodes > ul > li').each((i, el) => {
    list.push({
     animeId: $(el).find('p.name > a').attr('href').split('/')[2],
-    animeTitle: $(el).find('p.name > a').attr('title'),
+    animeTitle: animeTitle,
     animeUrl: BASE_URL + '/' + $(el).find('p.name > a').attr('href'),
     animeImg: $(el).find('div > a > img').attr('src'),
     status: $(el).find('p.released').text().trim(),
@@ -213,7 +213,7 @@ export const scrapeRecentRelease = async ({ list = [], page = 1, type = 1 }) => 
    list.push({
     animeId: $(el).find('p.name > a').attr('href').split('/')[1].split('-episode-')[0],
     episodeId: $(el).find('p.name > a').attr('href').split('/')[1],
-    animeTitle: $(el).find('p.name > a').attr('title'),
+    animeTitle: animeTitle,
     episodeNum: $(el).find('p.episode').text().replace('Episode ', '').trim(),
     subOrDub: $(el).find('div > a > div').attr('class').replace('type ic-', ''),
     animeImg: $(el).find('div > a > img').attr('src'),
@@ -237,7 +237,7 @@ export const scrapeNewSeason = async ({ list = [], page = 1 }) => {
   $('div.last_episodes > ul > li').each((i, el) => {
    list.push({
     animeId: $(el).find('p.name > a').attr('href').split('/')[2],
-    animeTitle: $(el).find('p.name > a').attr('title'),
+    animeTitle: animeTitle,
     animeImg: $(el).find('div > a > img').attr('src'),
     releasedDate: $(el).find('p.released').text().replace('Released: ', '').trim(),
     animeUrl: BASE_URL + '/' + $(el).find('p.name > a').attr('href'),
@@ -260,7 +260,7 @@ export const scrapePopularAnime = async ({ list = [], page = 1 }) => {
   $('div.last_episodes > ul > li').each((i, el) => {
    list.push({
     animeId: $(el).find('p.name > a').attr('href').split('/')[2],
-    animeTitle: $(el).find('p.name > a').attr('title'),
+    animeTitle: animeTitle,
     animeImg: $(el).find('div > a > img').attr('src'),
     releasedDate: $(el).find('p.released').text().replace('Released: ', '').trim(),
     animeUrl: BASE_URL + '/' + $(el).find('p.name > a').attr('href'),
@@ -283,7 +283,7 @@ export const scrapeAnimeMovies = async ({ list = [], aph = '', page = 1 }) => {
   $('div.last_episodes > ul > li').each((i, el) => {
    list.push({
     animeId: $(el).find('p.name > a').attr('href').split('/')[2],
-    animeTitle: $(el).find('p.name > a').attr('title'),
+    animeTitle: animeTitle,
     animeImg: $(el).find('div > a > img').attr('src'),
     releasedDate: $(el).find('p.released').text().replace('Released: ', '').trim(),
     animeUrl: BASE_URL + '/' + $(el).find('p.name > a').attr('href'),

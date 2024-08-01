@@ -21,7 +21,6 @@ export async function generateEncryptAjaxParameters($, id) {
     const token = CryptoJS.AES['decrypt'](script, keys.key, {
         iv: keys.iv,
     }).toString(CryptoJS.enc.Utf8);
-
     return 'id=' + encrypted_key + '&alias=' + id + '&' + token;
 }
 /**
